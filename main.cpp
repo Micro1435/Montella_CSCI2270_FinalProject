@@ -119,6 +119,9 @@ int main(int argc, char * argv[]) {
                         break;
                     }
                 }
+                // Checking if year is 4 total characters
+                if (yearWithoutHyphen.length() != 4)
+                    isInt = false;
             }
             TreeStat.printSeasonStats(year);
             
