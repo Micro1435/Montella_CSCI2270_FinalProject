@@ -9,6 +9,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdio.h>
+#include <algorithm>
 #include "statTree.h"
 
 using namespace std;
@@ -90,13 +92,34 @@ int main(int argc, char * argv[]) {
             
         } else if (choice == 3) {
             string year;
+            string yearWithoutHyphen;
+            bool isInt = false;
             cin.ignore();
-            
-            cout << "Which season would you like to look at?" << endl;
-            cout << "Enter the last 2 digits of each year like this: 'yy-yy'  (i.e. for Kobe's first season, put '96-97'" << endl;
-            
-            getline(cin, year);
-            
+            while(!isInt) {
+                yearWithoutHyphen = "";
+                isInt = true;
+
+                cout << "Which season would you like to look at?" << endl;
+                cout << "Enter the last 2 digits of each year like this: 'yy-yy'  (i.e. for Kobe's first season, put '96-97'" << endl;
+                cin.sync(); // Fixes false negative issue
+                getline(cin, year);
+
+                // Removing spaces from string
+                year.erase(std::remove_if(year.begin(), year.end(), ::isspace), year.end());
+
+                // Making year without hyphen
+                for (int i = 0; i < year.length(); i++) {
+                    if (i != 2) // Ignoring assumed position without hyphen
+                        yearWithoutHyphen += year.at(i); // New string won't include hyphen
+                }
+                // Checking if every digit in OG year (except hyphen) is a digit 0-9
+                for (int i = 0; i < yearWithoutHyphen.length(); i++) {
+                    if (!isdigit(yearWithoutHyphen.at(i))) {
+                        isInt = false;
+                        break;
+                    }
+                }
+            }
             TreeStat.printSeasonStats(year);
             
         } else if (choice == 4) {
